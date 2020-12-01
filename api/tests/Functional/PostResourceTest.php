@@ -6,13 +6,16 @@ namespace App\Tests\Functional;
 
 use App\Entity\Post;
 use App\Test\CustomApiTest;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostResourceTest extends CustomApiTest
 {
 
     public function testGetCollection()
     {
-        $user = $this->createNewUser('alex@mail.com', '1234');
+        $client = static::createClient();
+        $this->registerUser($client,'alex@mail.com', '1234');
+        $user = $this->getUserByEmail('alex@mail.com');
         $post = (new Post())
             ->setTitle('Title')
             ->setBody('Body')
@@ -20,8 +23,14 @@ class PostResourceTest extends CustomApiTest
         $em = $this->getManager();
         $em->persist($post);
         $em->flush();
-        $client = static::createClient();
-        $response = $client->request("GET", '/api/posts');
+
+        $response = $client->request("GET", '/posts');
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        $token = $this->loginUser($client,'alex@mail.com', '1234');
+        $response = $client->request("GET", '/posts', ['headers' => [
+            'Authorization' => 'Bearer '.$token,
+        ]]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     public function testCreateElement()
