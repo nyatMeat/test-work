@@ -1,0 +1,7 @@
+authentication_token:
+    path: /authentication_token
+    methods: ['POST']
+register:
+    path: /register
+    controller: App\Controller\SecurityController::register
+    methods: ['POST']
