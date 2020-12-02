@@ -34,10 +34,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     itemOperations={
  *      "get",
  *      "put" = {
- *            "security" = "is_granted('EDIT', previous_object)"
+ *            "security" = "is_granted('EDIT', object)",
+ *             "security_message"="Sorry, but you are not the book owner."
  *          },
  *      "delete" = {
- *           "security" = "is_granted('EDIT', previous_object)"
+ *            "security" = "is_granted('EDIT', object)",
+ *            "security_message"="Sorry, but you are not the book owner."
  *          }
  *     }
  * )

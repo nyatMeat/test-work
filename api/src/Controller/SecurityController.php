@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
         $data = json_decode($request->getContent(), true);
         if (!isset($data['email'], $data['password']))
         {
-            return new JsonResponse(['errors' => ["Invalid data"]]);
+            return new JsonResponse(['errors' => ["Invalid data"]], Response::HTTP_BAD_REQUEST);
         }
 
         $user = $this->userRepository->findOneBy(['email' => $data['email']]);

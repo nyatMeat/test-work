@@ -16,18 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @ApiResource(
- *     normalizationContext={"groups"={"user:read"}},
- *     collectionOperations={
-        "get" = {
- *         "access_control" = "is_granted('ROLE_ADMIN')"
- *     }
- *     },
- *     itemOperations={
-            "get",
- *     },
- *
- *     )
  */
 class User implements UserInterface
 {

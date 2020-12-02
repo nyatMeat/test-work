@@ -154,6 +154,9 @@
             "fixtures/.gitignore"
         ]
     },
+    "joshtronic/php-loremipsum": {
+        "version": "1.0.6"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
