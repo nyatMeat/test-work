@@ -44,10 +44,15 @@ class SecurityController extends AbstractController
     }
 
 
+    /**
+     * User register controller
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function register(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        if (!isset($data['email'], $data['password']))
+        if (!isset($data['email'], $data['password'], $data['fullName']))
         {
             return new JsonResponse(['errors' => ["Invalid data"]], Response::HTTP_BAD_REQUEST);
         }
@@ -58,6 +63,7 @@ class SecurityController extends AbstractController
             return new JsonResponse(['errors' => ["User with email already exists"]], Response::HTTP_CONFLICT);
         }
         $user = (new User())
+            ->setFullName($data['fullName'])
             ->setEmail($data['email']);
         $user->setPassword($this->passwordEncoder->encodePassword($user, $data['password']));
         $validation = $this->validator->validate($user);

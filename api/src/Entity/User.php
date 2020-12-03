@@ -14,6 +14,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user:read"}},
+ *     collectionOperations={
+ *           "get"
+ *     },
+ *     itemOperations={
+ *          "get" = {
+ *               "normalization_context" = {
+ *                  "groups"={"user:read:get_element"}
+ *              }
+ *          },
+ *          "patch" = {
+ *              "denormalization_context" ={"groups"={"user:write"}},
+ *              "security" = "object == user",
+ *              "security_message" = "Only owner can update his own profile"
+ *          }
+ *     },
+ *     )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
@@ -21,24 +39,38 @@ class User implements UserInterface
 {
 
     use Timestampable;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","post:read"})
      */
     private $id;
 
     /**
+     * @Groups({"user:owner:read", "admin:read"})
      * @Assert\Email()
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
+     * @Groups({"admin:read", "admin:write"})
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * User full name in system
+     *
+     * @Groups({"user:write", "user:read", "post:read"})
+     * @Assert\NotBlank
+     * @Assert\Length(max="180")
+     * @var string
+     * @ORM\Column(type="string", length=180)
+     */
+    private $fullName = '';
 
     /**
      * @Assert\NotBlank()
@@ -48,7 +80,9 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @Groups({"user:read"})
+     * Posts have been written by user
+     *
+     * @Groups({"user:read:get_element"})
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="owner")
      */
     private $posts;
@@ -169,4 +203,24 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->fullName;
+    }
+
+    /**
+     * @param string $fullName
+     * @return $this
+     */
+    public function setFullName(string $fullName)
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
+
+
 }

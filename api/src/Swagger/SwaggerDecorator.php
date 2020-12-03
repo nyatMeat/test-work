@@ -65,6 +65,10 @@ final class SwaggerDecorator implements NormalizerInterface
                     'type' => 'string',
                     'example' => 'password',
                 ],
+                'fillName' => [
+                    'type' => 'string',
+                    'example' => 'Alex Merser',
+                ],
             ],
         ];
 

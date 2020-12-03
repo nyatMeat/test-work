@@ -1,21 +1,28 @@
 This is dockerized test task
 
-[Here is the desciption of test task](https://docs.google.com/document/d/1uUG3akf4R8A2rNBcdAi70s5EEHTqidstbXDtiHSHNXU/edit)
+[Here is the description of the test task](https://docs.google.com/document/d/1uUG3akf4R8A2rNBcdAi70s5EEHTqidstbXDtiHSHNXU/edit)
 
 To start this application you have to execute command
+
+For this test task I decided to use new Symfony api-platform.
+Api platform provide flexible way to build restApi applications 
+with an automatic documentation and serialization in any format dynamically out of the box
 
 ```
 docker-compose up -d --build
 ```
-in current directory (api-platform-2.5.7). This command will install whole environment for work
-
-When environment will be ready you have to execute command in php docker container
+it will start the application without xdebug
+if you want to run application with xdebug you should run command
 ```
-docker-compose exec php composer install
+docker-compose -f docker-compose.dev up -d --build
 ```
-it will install all necessary packages
+Here is documentation how to configure phpstorm and dockerized project
+```
+https://api-platform.com/docs/distribution/debugging/#xdebug
+```
+in the current directory (api-platform-2.5.7)
 
-and
+When docker environment build will be done you need execute command which will generate keys for JWT authentication
 ```
 docker-compose exec php sh -c '
     set -e
@@ -28,15 +35,9 @@ docker-compose exec php sh -c '
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 '
 ```
-previous command create keys for jwt token system
 
-To run the test before start you have to run command
-```
-docker-compose exec php bin/console doctrine:database:create --env test
-```
-This command will create database for functional tests
 
-And then you can run the test by using command
+You can run the test by executing command below
 ```
 docker-compose exec php bin/phpunit
 ```
@@ -45,3 +46,4 @@ If you want to see documentation for api you need to visit
 ```
 https://localhost:8443/docs
 ```
+In this page you will find all api endpoints with descriptions and examples

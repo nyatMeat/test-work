@@ -27,8 +27,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     collectionOperations={
  *      "get",
  *      "post" = {
- *              "security" = "is_granted('ROLE_USER')",
- *              "security_message" = "Only authenticated user can add posts"
+ *              "security" = "is_granted('ADD')",
+ *              "security_message" = "You cannot add post"
  *          }
  *     },
  *     itemOperations={
@@ -86,6 +86,7 @@ class Post
 
 
     /**
+     * @Groups("post:read")
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */

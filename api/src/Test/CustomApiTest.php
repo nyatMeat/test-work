@@ -18,11 +18,11 @@ class CustomApiTest extends ApiTestCase
 {
     use ReloadDatabaseTrait;
 
-    public function registerUser(Client $client, string $email, string $password)
+    public function registerUser(Client $client, string $email, string $password, string $fullName = "Alex Merser")
     {
         $client->request("POST", '/register', [
             'json' =>
-                ['email' => $email, 'password' => $password]
+                ['email' => $email, 'password' => $password, 'fullName' => $fullName]
         ]);
     }
 

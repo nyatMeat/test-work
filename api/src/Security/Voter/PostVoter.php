@@ -8,6 +8,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Check access to the post
+ * Class PostVoter
+ * @package App\Security\Voter
+ */
 class PostVoter extends Voter
 {
 
@@ -25,7 +30,7 @@ class PostVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['EDIT', 'VIEW'])
+        return in_array($attribute, ['EDIT', 'VIEW', 'ADD'])
             && $subject instanceof Post;
     }
 
@@ -58,14 +63,13 @@ class PostVoter extends Voter
                     return true;
                 }
                 return false;
-                // logic to determine if the user can EDIT
-                // return true or false
-                break;
+
             case 'VIEW':
                 // logic to determine if the user can VIEW
                 // return true or false
                 return true;
-                break;
+            case "ADD":
+                return$this->security->isGranted('ROLE_USER');
         }
 
         throw new \DomainException('Invalid attribute: ' . $attribute);
